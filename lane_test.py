@@ -1,30 +1,20 @@
 # Importing some useful libarries
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import numpy as np
 import cv2
 import math
-# Import everything needed to edit/save/watch video clips
-#from moviepy.editor import VideoFileClip
-#from IPython.display import HTML
 
-import os
-
+# Lane co-ordinates
 lane1X1, lane1Y1, lane1X2, lane1Y2 = 0,0,0,0
 lane2X1, lane2Y1, lane2X2, lane2Y2 = 0,0,0,0
 
-def process_image(image):
+def LaneDetect(image):
     global lane1X1, lane1Y1, lane1X2, lane1Y2
     global lane2X1, lane2Y1, lane2X2, lane2Y2
 
-    # TODO: put your pipeline here,
-    # you should return the final output (image with lines are drawn on lanes)
+    # TODO: put image pipeline here,
+    # Return the final output (image with lines are drawn on lanes)
 
-    # Reading in an image
-    #image = mpimg.imread('test_images/whiteCarLaneSwitch.jpg')
-    # Printing out some stats and plotting
-    #print('This image is: ', type(image) , 'With dimensions: ', image.shape)
-    #print plt.imshow(image)
+    # Get image height and width
     h, w = image.shape[0], image.shape[1]
     # Find ROI part
     offsetX = h/2 + 50
@@ -77,40 +67,38 @@ def process_image(image):
                             if count == 0:
                                 lane1X1, lane1Y1, lane1X2, lane1Y2 = x1, y1, x2, y2
                                 count += 1
-                                #print 'lane1'
                             elif count == 1 and y1>0:
                                 lane2X1, lane2Y1, lane2X2, lane2Y2 = x1, y1, x2, y2
                                 count += 1
-                                #print 'lane2'
                 prevTheta = theta
 
-    print 'lane1: ', (lane1X1, lane1Y1), (lane1X2, lane1Y2)
-    print 'lane2: ', (lane2X1, lane2Y1), (lane2X2, lane2Y2)
-    print
+    #print 'lane1: ', (lane1X1, lane1Y1), (lane1X2, lane1Y2)
+    #print 'lane2: ', (lane2X1, lane2Y1), (lane2X2, lane2Y2)
+    #print
     cv2.line(ROI, (lane1X1, lane1Y1), (lane1X2, lane1Y2), lineColor, lineThickness)
     cv2.line(ROI, (lane2X1, lane2Y1), (lane2X2, lane2Y2), lineColor, lineThickness)
 
     # Add edge detection part into original image
     image[offsetX:,:] = ROI
-    #print plt.imshow(image)
     return image
 
-input_video =  'solidYellowLeft.mp4' #'VIDEO0024Trimmed.mp4' #'challenge.mp4' #'solidYellowLeft.mp4' #'solidWhiteRight.mp4'
-cap = cv2.VideoCapture(input_video)
+def Main():
+    input_video =  'solidYellowLeft.mp4' #'VIDEO0024Trimmed.mp4' #'challenge.mp4' #'solidYellowLeft.mp4' #'solidWhiteRight.mp4'
+    cap = cv2.VideoCapture(input_video)
 
-while True:
-    # Capture frame-by-frame
-    ret, frame = cap.read()
+    while True:
+        # Capture frame-by-frame
+        ret, frame = cap.read()
 
-    # Our operations on the frame come here
-    #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Process an image for lane detection
+        processed_frame = LaneDetect(frame)
 
-    processed_frame = process_image(frame)
+        # Display the resulting frame
+        cv2.imshow('processed_frame',processed_frame)
 
-    # Display the resulting frame
-    cv2.imshow('processed_frame',processed_frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        # Quit if key 'q' is pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-#clip1 = VideoFileClip("solidWhiteRight.mp4")
-#white_clip = clip1.fl_image(process_image)
+if __name__ == '__main__' :
+    Main()
