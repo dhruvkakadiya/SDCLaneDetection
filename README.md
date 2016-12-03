@@ -66,3 +66,9 @@ Jupyter is an ipython notebook where you can run blocks of code and see results 
 `> jupyter notebook`
 
 A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+
+**Step 4:** Running a sample code
+
+You can run a sample code to detect lanes on given input video by running lane_test.py script.
+
+`> python lane_test.py`
