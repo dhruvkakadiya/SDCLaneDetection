@@ -85,20 +85,20 @@ def LaneDetect(image):
 def Main():
     input_video =  'solidYellowLeft.mp4' #'VIDEO0024Trimmed.mp4' #'challenge.mp4' #'solidYellowLeft.mp4' #'solidWhiteRight.mp4'
     cap = cv2.VideoCapture(input_video)
-
+    
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
+
+        # Quit if either key 'q' is pressed or no frame available
+        if (cv2.waitKey(1) & 0xFF == ord('q')) or not ret:
+            break
 
         # Process an image for lane detection
         processed_frame = LaneDetect(frame)
 
         # Display the resulting frame
         cv2.imshow('processed_frame',processed_frame)
-
-        # Quit if key 'q' is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
 
 if __name__ == '__main__' :
     Main()
